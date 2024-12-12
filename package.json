@@ -8,7 +8,9 @@
     "start": "node backend/server.js",
     "server": "nodemon backend/server.js",
     "client": "npm run dev --prefix frontend",
-    "dev": "concurrently \"npm run server\" \"npm run client \""
+    "dev": "concurrently \"npm run server\" \"npm run client \"",
+    "data:import": "node backend/dataSeeder.js",
+    "data:destroy": "node backend/dataSeeder.js --delete"
   },
   "keywords": [
     "MERN",
@@ -18,8 +20,10 @@
   "author": "Alsharif-Suhaim",
   "license": "MIT",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
-    "express": "^4.21.2"
+    "express": "^4.21.2",
+    "mongoose": "^8.8.4"
   },
   "devDependencies": {
     "concurrently": "^9.1.0",
