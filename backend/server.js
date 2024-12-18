@@ -3,14 +3,16 @@ import dotenv from "dotenv";
 import cors from "cors";
 import connectDB from "./config/db.js";
 import routes from "./routes/index.js";
-
+import cookieParser from "cookie-parser";
 dotenv.config();
 const app = express();
 const port = process.env.PORT;
 
 connectDB();
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 app.use(cors());
+app.use(cookieParser());
 app.use(routes);
 
 // Global Error Handler Middleware

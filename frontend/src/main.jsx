@@ -9,20 +9,25 @@ import {
   createRoutesFromElements,
   Route,
 } from "react-router-dom";
+import { Provider } from "react-redux";
+import store from "./store.js";
 import "./styles/bootstrap.custom.css";
 import App from "./App.jsx";
 import ProductDetail from "./sections/ProductDetail.jsx";
-
+import Cart from "./sections/Cart.jsx";
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />}>
       <Route index={true} path="/" element={<Home />} />
       <Route path="/product/:id" element={<ProductDetail />} />
+      <Route path="/cart" element={<Cart />} />
     </Route>
   )
 );
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <Provider store={store}>
+      <RouterProvider router={router} />
+    </Provider>
   </StrictMode>
 );
