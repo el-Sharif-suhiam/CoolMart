@@ -1,12 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
-
+import { updateCart } from "../utils/cartUtils";
 const initialState = localStorage.getItem("cart")
   ? JSON.parse(localStorage.getItem("cart"))
-  : { cartItems: [] };
+  : { cartItems: [], shippingAddress: {}, paymentMethod: "PayPal" };
 
-function addDecimals(num) {
-  return ((num * 100) / 100).toFixed(2);
-}
 const cartSlice = createSlice({
   name: "cart",
   initialState,
@@ -22,35 +19,34 @@ const cartSlice = createSlice({
       } else {
         state.cartItems = [...state.cartItems, item];
       }
-
-      // calaculate items price
-      state.itemPrice = state.cartItems.reduce(
-        (acc, item) => acc + item.price * item.qty,
-        0
-      );
-      state.itemPrice = addDecimals(state.itemPrice);
-
-      // calaculate shipping price ( above 100 shipping will be 15 else it will be free)
-      state.shippingPrice = state.itemPrice > 100 ? 15 : 0;
-      state.shippingPrice = addDecimals(state.shippingPrice);
-      // calculate tax price (8% tax)
-      state.taxPrice = 0.08 * state.itemPrice;
-      state.taxPrice = addDecimals(state.taxPrice);
-      // total price
-      state.totalPrice =
-        +state.itemPrice + +state.shippingPrice + +state.taxPrice;
-      state.totalPrice = addDecimals(state.totalPrice);
-
-      localStorage.setItem("cart", JSON.stringify(state));
+      return updateCart(state);
     },
     removeFromCart: (state, action) => {
       state.cartItems = state.cartItems.filter(
         (ele) => ele._id !== action.payload
       );
-      localStorage.setItem("cart", JSON.stringify(state));
+      return updateCart(state);
+    },
+    saveShippingAddress: (state, action) => {
+      state.shippingAddress = action.payload;
+      return updateCart(state);
+    },
+    savePaymentMethod: (state, action) => {
+      state.paymentMethod = action.payload;
+      return updateCart(state);
+    },
+    clearCartItems: (state) => {
+      state.cartItems = [];
+      return updateCart(state);
     },
   },
 });
 
-export const { addToCart, removeFromCart } = cartSlice.actions;
+export const {
+  addToCart,
+  removeFromCart,
+  saveShippingAddress,
+  savePaymentMethod,
+  clearCartItems,
+} = cartSlice.actions;
 export default cartSlice.reducer;

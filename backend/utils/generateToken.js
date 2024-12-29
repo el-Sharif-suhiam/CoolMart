@@ -5,7 +5,7 @@ export default function generateToken(res, userId) {
     expiresIn: "15d",
   });
 
-  res.cookie("jwt", token, {
+  return res.cookie("jwt", token, {
     httpOnly: true,
     secure: process.env.NODE_ENV !== "dev",
     sameSite: "strict",

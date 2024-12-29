@@ -11,20 +11,21 @@ const port = process.env.PORT;
 connectDB();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(cors());
+app.use(cors({ credentials: true, origin: "http://localhost:5173" }));
 app.use(cookieParser());
 app.use(routes);
 
+app.get("/api/config/paypal", (req, res) => {
+  res.send(process.env.PAYPAL_CLIENT_ID);
+});
 // Global Error Handler Middleware
 app.use((err, req, res, next) => {
-  // Use a default status code if not provided
-  const statusCode = err.statusCode || 500;
+  let statusCode = res.statusCode === 200 ? 500 : res.statusCode;
+  let message = err.message;
 
   res.status(statusCode).json({
-    status: statusCode >= 500 ? "error" : "fail", // Error for server issues, Fail for client issues
-    message: err.message,
-    path: req.path,
-    stack: process.env.NODE_ENV === "production" ? null : err.stack, // Show stack trace only in development
+    message: message,
+    stack: process.env.NODE_ENV === "production" ? null : err.stack,
   });
 });
 

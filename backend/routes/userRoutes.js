@@ -20,7 +20,12 @@ router.post(
     const user = await User.findOne({ email });
     if (user && (await user.matchPassword(password))) {
       generateToken(res, user._id);
-      res.send("logged in");
+      res.json({
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        isAdmin: user.isAdmin,
+      });
     } else {
       res.status(401);
       throw new Error("Invalid email or password");

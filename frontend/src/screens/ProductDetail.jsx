@@ -34,9 +34,12 @@ function ProductDetail() {
 
   return (
     <>
-      <Link className="btn btn-outline-secondary my-3" to="/">
+      <button
+        className="btn btn-outline-secondary my-3"
+        onClick={() => window.navigation.back()}
+      >
         Go Back
-      </Link>
+      </button>
 
       {isLoading ? (
         <Loader />
