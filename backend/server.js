@@ -1,3 +1,4 @@
+import path from "path";
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
@@ -16,8 +17,12 @@ app.use(cookieParser());
 app.use(routes);
 
 app.get("/api/config/paypal", (req, res) => {
-  res.send(process.env.PAYPAL_CLIENT_ID);
+  res.send({ clientID: process.env.PAYPAL_CLIENT_ID });
 });
+
+const _dirname = path.resolve();
+app.use("/uploads", express.static(path.join(_dirname, "/uploads")));
+
 // Global Error Handler Middleware
 app.use((err, req, res, next) => {
   let statusCode = res.statusCode === 200 ? 500 : res.statusCode;
