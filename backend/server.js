@@ -18,10 +18,7 @@ app.use(express.json());
 app.use(
   cors({
     credentials: true,
-    origin:
-      process.env.NODE_ENV === "dev"
-        ? process.env.CLIENT_URL
-        : process.env.PRODUCTION_URL,
+    origin: process.env.CLIENT_URL,
   })
 );
 app.use(cookieParser());
@@ -54,12 +51,16 @@ app.get("/session-status", async (req, res) => {
 const _dirname = path.resolve();
 app.use("/uploads", express.static(path.join(_dirname, "/uploads")));
 
-if (process.env.NODE_ENV === "dev") {
+if (process.env.NODE_ENV === "production") {
   // set static folder
-  app.use(express.static(path.join(_dirname, "/frontend/build")));
+  app.use(express.static(path.join(_dirname, "/frontend/dist")));
   // any route that is not api
   app.get("*", (req, res) => {
-    res.sendFile(path.resolve(_dirname, "frontend", "build", "index.html"));
+    res.sendFile(path.resolve(_dirname, "frontend", "dist", "index.html"));
+  });
+} else {
+  app.get("/", (req, res) => {
+    res.send("API is running");
   });
 }
 // Global Error Handler Middleware

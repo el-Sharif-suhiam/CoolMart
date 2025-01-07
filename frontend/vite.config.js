@@ -10,15 +10,19 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 dotenv.config({ path: resolve(__dirname, "../.env") });
-// https://vite.dev/config/
+
 export default defineConfig({
   plugins: [react()],
+  base: "/",
   server: {
     proxy: {
-      "/uploads":
-        process.env.NODE_ENV === "dev"
-          ? process.env.SERVER_URL
-          : process.env.PRODUCTION_URL,
+      "/uploads": {
+        target:
+          process.env.NODE_ENV === "dev"
+            ? process.env.SERVER_URL
+            : process.env.PRODUCTION_URL,
+        changeOrigin: true,
+      },
       "/api": {
         target:
           process.env.NODE_ENV === "dev"
@@ -27,13 +31,20 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ""),
       },
-      "/create-checkout-session":
-        process.env.NODE_ENV === "dev"
-          ? process.env.SERVER_URL
-          : process.env.PRODUCTION_URL,
+      "/create-checkout-session": {
+        target:
+          process.env.NODE_ENV === "dev"
+            ? process.env.SERVER_URL
+            : process.env.PRODUCTION_URL,
+        changeOrigin: true,
+      },
     },
   },
+  build: {
+    outDir: "dist",
+    sourcemap: false,
+  },
   define: {
-    "process.env": process.env,
+    "process.env": JSON.stringify(process.env),
   },
 });
