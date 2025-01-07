@@ -15,7 +15,6 @@ dotenv.config({ path: resolve(__dirname, "../.env") });
 
 export default defineConfig({
   plugins: [react()],
-  base: "/",
   server: {
     proxy: {
       "/uploads": {
