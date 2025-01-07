@@ -11,15 +11,15 @@ export const updateCart = (state) => {
   );
   state.itemsPrice = addDecimals(itemsPrice);
 
-  // Calculate the shipping price
-  const shippingPrice = itemsPrice > 100 ? 10 : 0;
-  state.shippingPrice = addDecimals(shippingPrice);
+  // // Calculate the shipping price
+  // const shippingPrice = 0;
+  // state.shippingPrice = addDecimals(shippingPrice);
 
-  // Calculate the tax price
-  const taxPrice = 0.15 * itemsPrice;
-  state.taxPrice = addDecimals(taxPrice);
+  // // Calculate the tax price
+  // const taxPrice = 0;
+  // state.taxPrice = addDecimals(taxPrice);
 
-  const totalPrice = itemsPrice + shippingPrice + taxPrice;
+  const totalPrice = itemsPrice;
   // Calculate the total price
   state.totalPrice = addDecimals(totalPrice);
 

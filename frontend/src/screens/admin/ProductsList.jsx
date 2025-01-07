@@ -1,10 +1,10 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { Table, Button, Row, Col, Toast } from "react-bootstrap";
-import { FaTimes, FaEdit, FaTrash } from "react-icons/fa";
-import Message from "../../components/Message";
-import Loader from "../../components/Loader";
+import { Link, useSearchParams } from "react-router-dom";
+import { Table, Button, Row, Col } from "react-bootstrap";
+import { FaEdit, FaTrash } from "react-icons/fa";
+import Message from "../../components/utils/Message";
+import Loader from "../../components/utils/Loader";
 import { toast } from "react-toastify";
+import Pagienate from "../../components/UI/Pagienate";
 import {
   useGetProductsQuery,
   useCreateProductMutation,
@@ -12,10 +12,17 @@ import {
 } from "../../slices/productsApiSlice";
 
 function ProductsList() {
-  const { data: products, isLoading, error, refetch } = useGetProductsQuery();
+  const [searchParams] = useSearchParams();
+  const page = searchParams.get("page") || 1;
+  const limit = searchParams.get("limit") || 10;
+  const { data, isLoading, error, refetch } = useGetProductsQuery({
+    page,
+    limit,
+    search: searchParams.get("search") || "",
+  });
   const [createProduct, { isLoading: createLoading }] =
     useCreateProductMutation();
-  const [deleteProduct, { isLoading: deleteLoading, error: deleteError }] =
+  const [deleteProduct, { isLoading: deleteLoading }] =
     useDeleteProductMutation();
 
   async function productDeleteHandler(id) {
@@ -57,46 +64,60 @@ function ProductsList() {
       {isLoading ? (
         <Loader />
       ) : error ? (
-        <Message variant="danger">{error}</Message>
+        <Message variant="danger">
+          Error: {error.status} - {error.data?.message}
+        </Message>
       ) : (
         <>
-          <Table striped hover responsive className="table-sm">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>NAME</th>
-                <th>PRICE</th>
-                <th>CATEGORY</th>
-                <th>BRAND</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              {products.map((product) => (
-                <tr key={product._id}>
-                  <td>{product._id}</td>
-                  <td>{product.name}</td>
-                  <td>{product.price}</td>
-                  <td>{product.category}</td>
-                  <td>{product.brand}</td>
-                  <td>
-                    <Link to={`/admin/product/${product._id}/edit`}>
-                      <Button variant="light" className="btn-sm mx-2">
-                        <FaEdit />
-                      </Button>
-                    </Link>
-                    <Button
-                      variant="light"
-                      className="btn-sm"
-                      onClick={() => productDeleteHandler(product._id)}
-                    >
-                      <FaTrash style={{ color: "red" }} />
-                    </Button>
-                  </td>
+          <div
+            className="table-responsive "
+            style={{ overflowX: "auto", minHeight: "70vh" }}
+          >
+            <Table striped hover responsive className="table-sm">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>NAME</th>
+                  <th>PRICE</th>
+                  <th>CATEGORY</th>
+                  <th>BRAND</th>
+                  <th></th>
                 </tr>
-              ))}
-            </tbody>
-          </Table>
+              </thead>
+              <tbody>
+                {data.products.map((product) => (
+                  <tr key={product._id}>
+                    <td>{product._id}</td>
+                    <td>{product.name}</td>
+                    <td>{product.price}</td>
+                    <td>{product.category}</td>
+                    <td>{product.brand}</td>
+                    <td>
+                      <Link to={`/admin/product/${product._id}/edit`}>
+                        <Button variant="light" className="btn-sm mx-2">
+                          <FaEdit />
+                        </Button>
+                      </Link>
+                      <Button
+                        variant="light"
+                        className="btn-sm"
+                        onClick={() => productDeleteHandler(product._id)}
+                      >
+                        <FaTrash style={{ color: "red" }} />
+                      </Button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          </div>
+          <Pagienate
+            totalPages={data.pagesTotalNum}
+            currentPage={data.pageNumber}
+            isAdmin={true}
+            limit={limit}
+            search={searchParams.get("search") || ""}
+          />
         </>
       )}
     </>

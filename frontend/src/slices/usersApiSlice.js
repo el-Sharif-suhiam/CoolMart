@@ -57,6 +57,11 @@ export const usersApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["User"],
     }),
+    isUserAdmin: builder.query({
+      query: () => ({
+        url: "/api/userisAdmin",
+      }),
+    }),
     invalidatesTags: ["User"],
   }),
 });
@@ -70,4 +75,5 @@ export const {
   useDeleteUserMutation,
   useUpdateUserMutation,
   useGetUserDetailsQuery,
+  useIsUserAdminQuery,
 } = usersApiSlice;

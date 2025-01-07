@@ -1,9 +1,9 @@
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Form, Button } from "react-bootstrap";
-import Message from "../../components/Message";
-import Loader from "../../components/Loader";
-import FormContainer from "../../components/FormContainer";
+import Message from "../../components/utils/Message";
+import Loader from "../../components/utils/Loader";
+import FormContainer from "../../components/utils/FormContainer";
 import { useSelector } from "react-redux";
 
 import { toast } from "react-toastify";

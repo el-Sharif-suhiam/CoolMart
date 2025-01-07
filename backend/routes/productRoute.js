@@ -3,7 +3,7 @@ import asyncHandler from "../middleware/asyncHandler.js";
 import Product from "../models/productModal.js";
 import mongoose from "mongoose";
 import { userAuth, adminAuth } from "../middleware/authMiddleware.js";
-
+import { getRealData, calcThePrice } from "../middleware/paymentMiddleware.js";
 const router = express.Router();
 
 // @desc Fetch all products
@@ -14,15 +14,17 @@ router.get(
   asyncHandler(async (req, res) => {
     const productsInPage = Number(req.query.limit) || 2;
     const pageNumber = Number(req.query.page) || 1;
-    const totalProducts = await Product.countDocuments();
-    console.log(req.query);
+    const keyword = req.query.search
+      ? { name: { $regex: req.query.search, $options: "i" } }
+      : {};
+    const totalProducts = await Product.countDocuments({ ...keyword });
     const pagesTotalNum = Math.ceil(totalProducts / productsInPage);
 
     if (pagesTotalNum < pageNumber) {
       res.status(404);
       throw new Error("Page not found");
     } else {
-      const products = await Product.find({})
+      const products = await Product.find({ ...keyword })
         .limit(productsInPage)
         .skip(productsInPage * (pageNumber - 1));
       return res.json({
@@ -31,6 +33,19 @@ router.get(
         pagesTotalNum: Math.ceil(totalProducts / productsInPage),
       });
     }
+  })
+);
+
+// @desc get list of spicific products
+// @POST /api/products
+// @access Public
+router.post(
+  "/api/products",
+  asyncHandler(async (req, res) => {
+    const { ids } = req.body;
+    const idsArray = ids.map((id) => new mongoose.Types.ObjectId(id));
+    const products = await Product.find({ _id: { $in: idsArray } });
+    res.json(products);
   })
 );
 
@@ -173,5 +188,26 @@ router.post(
       throw new Error("resource not found");
     }
   })
+);
+
+// @dsec Get top rated products
+// @route GET /api/products/top
+// @access Public
+router.get(
+  "/api/products/top",
+  asyncHandler(async (req, res) => {
+    const products = await Product.find({}).sort({ rating: -1 }).limit(3);
+
+    res.json(products);
+  })
+);
+
+router.post(
+  "/api/products/check",
+  getRealData,
+  calcThePrice,
+  async (req, res) => {
+    res.json(req.totalPrice);
+  }
 );
 export default router;

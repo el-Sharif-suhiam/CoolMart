@@ -16,17 +16,22 @@ export const orderApiSlice = apiSlice.injectEndpoints({
       keepUnusedDataFor: 5,
     }),
     payOrder: builder.mutation({
-      query: ({ orderId, orderDetails }) => ({
+      query: ({ orderId }) => ({
         url: `/api/orders/${orderId}/pay`,
         method: "PATCH",
-        body: { ...orderDetails },
       }),
     }),
-    getPaypalClientId: builder.query({
-      qurty: () => ({
-        url: "/api/config/paypal",
+    getStripeClientId: builder.mutation({
+      query: ({ cartItems }) => ({
+        url: "/create-checkout-session",
+        method: "POST",
+        body: cartItems,
       }),
-      keepUnusedDataFor: 5,
+    }),
+    getPaymentStatus: builder.mutation({
+      query: ({ sessionId }) => ({
+        url: `/session-status?session_id=${sessionId}`,
+      }),
     }),
     getMyOrders: builder.query({
       query: () => ({
@@ -52,9 +57,11 @@ export const orderApiSlice = apiSlice.injectEndpoints({
 export const {
   useCreateOrderMutation,
   useGetOrderDetailsQuery,
-  useGetPaypalClientIdQuery,
   usePayOrderMutation,
   useGetMyOrdersQuery,
   useGetAllOrdersQuery,
   useDeliverOrderMutation,
+  useGetStripeUrlMutation,
+  useGetStripeClientIdMutation,
+  useGetPaymentStatusMutation,
 } = orderApiSlice;

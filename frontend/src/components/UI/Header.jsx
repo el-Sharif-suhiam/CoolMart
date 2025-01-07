@@ -1,11 +1,11 @@
-//import React from "react";
 import { Badge, Navbar, Nav, Container, NavDropdown } from "react-bootstrap";
 import { FaShoppingCart, FaUser } from "react-icons/fa";
-import logo from "/logo.png";
+import logo from "/store.png";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { useLogoutMutation } from "../slices/usersApiSlice";
-import { logout } from "../slices/authSlice";
+import { useLogoutMutation } from "../../slices/usersApiSlice";
+import { logout } from "../../slices/authSlice";
+import { toast } from "react-toastify";
 function Header() {
   const { cartItems } = useSelector((state) => state.cart);
   const { userInfo } = useSelector((state) => state.auth);
@@ -20,7 +20,7 @@ function Header() {
       dispatch(logout());
       navigate("/login");
     } catch (error) {
-      console.log(error);
+      toast(error);
     }
   }
   return (
@@ -28,13 +28,17 @@ function Header() {
       <Navbar bg="dark" variant="dark" expand="md" collapseOnSelect>
         <Container>
           <Navbar.Brand as={Link} to="/">
-            <img src={logo} alt="ProShop" />
-            ProShop
+            <img
+              src={logo}
+              alt="CoolMart"
+              style={{ width: "50px", marginRight: "10px" }}
+            />
+            CoolMart
           </Navbar.Brand>
 
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
-            <Nav className="ms-auto">
+            <Nav className="ms-auto gap-2">
               <Nav.Link as={Link} to="/cart">
                 <FaShoppingCart /> Cart
                 {cartItems.length > 0 && (

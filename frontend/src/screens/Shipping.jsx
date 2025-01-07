@@ -1,20 +1,21 @@
 import React from "react";
 import { Form, Button } from "react-bootstrap";
-import FormContainer from "../components/FormContainer";
+import FormContainer from "../components/utils/FormContainer";
 import { useDispatch, useSelector } from "react-redux";
 import { saveShippingAddress } from "../slices/cartSlice";
 import { useNavigate } from "react-router-dom";
-import CheckoutSteps from "../components/CheckoutSteps";
+import CheckoutSteps from "../components/UI/CheckoutSteps";
+
 function Shipping() {
   const cart = useSelector((state) => state.cart);
   const { shippingAddress } = cart;
-
   const [fullAddress, setFullAddress] = React.useState({
     address: shippingAddress?.address || "",
     city: shippingAddress?.city || "",
     postalCode: shippingAddress?.postalCode || "",
     country: shippingAddress?.country || "",
   });
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 

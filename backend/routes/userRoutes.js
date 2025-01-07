@@ -214,4 +214,15 @@ router.put(
   })
 );
 
+// @desc isAdmin user
+// @route GET /api/user/isAdmin
+// @access Private/Admin
+router.get(
+  "/api/userisAdmin",
+  userAuth,
+  adminAuth,
+  asyncHandler(async (req, res) => {
+    res.send(req.user.isAdmin);
+  })
+);
 export default router;

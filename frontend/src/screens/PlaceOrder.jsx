@@ -1,44 +1,75 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { Button, Row, Col, ListGroup, Image, Card } from "react-bootstrap";
-import CheckoutSteps from "../components/CheckoutSteps";
+import CheckoutSteps from "../components/UI/CheckoutSteps.jsx";
 import { toast } from "react-toastify";
-import { useCreateOrderMutation } from "../slices/orderApiSlice.js";
+import {
+  useCreateOrderMutation,
+  useGetPaymentStatusMutation,
+  usePayOrderMutation,
+} from "../slices/orderApiSlice.js";
 import { clearCartItems } from "../slices/cartSlice";
-
-import Message from "../components/Message";
-import Loader from "../components/Loader";
+//import { useGetStripeUrlMutation } from "../slices/orderApiSlice";
+import Message from "../components/utils/Message.jsx";
+import Loader from "../components/utils/Loader.jsx";
 
 function PlaceOrder() {
+  const [search] = useSearchParams();
+
+  const [status, setStatus] = React.useState(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const cart = useSelector((state) => state.cart);
 
+  //const { cartItems } = cart;
+  // const [getStripeUrl, { isLoading: stripeLoading, error: stripeError }] =
+  //   useGetStripeUrlMutation();
+
+  const [getPaymentStatus] = useGetPaymentStatusMutation();
+
+  React.useEffect(() => {
+    const sessionId = search.get("session_id");
+    async function getStatus() {
+      const status = await getPaymentStatus({ sessionId });
+      setStatus(status.data.status);
+    }
+    getStatus();
+  }, []);
+
   const [createOrder, { isLoading, error }] = useCreateOrderMutation();
+  const [payOrder, { isLoading: loadingPay }] = usePayOrderMutation();
+
   React.useEffect(() => {
     if (!cart.shippingAddress.address) {
       navigate("/shipping");
-    } else if (!cart.paymentMethod) {
-      navigate("/payment");
     }
-  }, [cart.shippingAddress.address, cart.paymentMethod, navigate]);
+  }, [cart.shippingAddress.address, navigate]);
 
   async function PlaceOrderHandler() {
     try {
       const res = await createOrder({
         orderItems: cart.cartItems,
         shippingAddress: cart.shippingAddress,
-        paymentMethod: cart.paymentMethod,
+        paymentMethod: "card",
         itemsPrice: cart.itemsPrice,
-        shippingPrice: cart.shippingPrice,
-        taxPrice: cart.taxPrice,
         totalPrice: cart.totalPrice,
       }).unwrap();
-      dispatch(clearCartItems());
-      navigate(`/order/${res._id}`);
+      if (!res || !res._id) {
+        throw new Error("Failed to create order.");
+      }
+      if (status === "complete") {
+        const order = await payOrder({ orderId: res._id });
+        if (order.data.isPaid) {
+          toast.success("Order paid successfully");
+          dispatch(clearCartItems());
+          navigate(`/order/${res._id}`);
+        } else {
+          throw new Error("Payment not completed.");
+        }
+      }
     } catch (error) {
-      toast.error(error);
+      toast.error(error?.data?.message || error);
     }
   }
   return (
@@ -59,7 +90,7 @@ function PlaceOrder() {
             <ListGroup.Item>
               <h2>Payment Method</h2>
               <strong>Method: </strong>
-              {cart.paymentMethod}
+              Credit Card
             </ListGroup.Item>
             <ListGroup.Item>
               <h2>Order Items</h2>
@@ -110,13 +141,13 @@ function PlaceOrder() {
               <ListGroup.Item>
                 <Row>
                   <Col>Shipping</Col>
-                  <Col>${cart.shippingPrice}</Col>
+                  <Col>Free</Col>
                 </Row>
               </ListGroup.Item>
               <ListGroup.Item>
                 <Row>
                   <Col>Tax</Col>
-                  <Col>${cart.taxPrice}</Col>
+                  <Col>$0.00</Col>
                 </Row>
               </ListGroup.Item>
               <ListGroup.Item>
@@ -135,7 +166,7 @@ function PlaceOrder() {
                 >
                   Place Order
                 </Button>
-                {isLoading && <Loader />}
+                {isLoading && loadingPay && <Loader />}
               </ListGroup.Item>
             </ListGroup>
           </Card>

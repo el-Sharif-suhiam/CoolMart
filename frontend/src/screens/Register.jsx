@@ -1,12 +1,12 @@
 import React from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Form, Button, Row, Col } from "react-bootstrap";
-import FormContainer from "../components/FormContainer";
+import FormContainer from "../components/utils/FormContainer";
 import { useSelector, useDispatch } from "react-redux";
 import { useRegisterMutation } from "../slices/usersApiSlice";
 import { setCredentials } from "../slices/authSlice";
 import { toast } from "react-toastify";
-import Loader from "../components/Loader";
+import Loader from "../components/utils/Loader";
 function Register() {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");

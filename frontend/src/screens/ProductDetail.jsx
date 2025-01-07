@@ -14,11 +14,12 @@ import {
   Button,
   Form,
 } from "react-bootstrap";
-import Rating from "../components/Rating";
-import Loader from "../components/Loader";
-import Message from "../components/Message";
+import Rating from "../components/UI/Rating";
+import Loader from "../components/utils/Loader";
+import Message from "../components/utils/Message";
 import { addToCart } from "../slices/cartSlice";
 import { toast } from "react-toastify";
+import Meta from "../components/utils/Meta";
 
 function ProductDetail() {
   const params = useParams();
@@ -71,7 +72,8 @@ function ProductDetail() {
         <Message variant="danger">{error?.message || error?.error}</Message>
       ) : (
         <>
-          {" "}
+          <Meta title={theProduct.name} description={theProduct.description} />
+
           <Row>
             <Col md={5}>
               <Image src={theProduct.image} alt={theProduct.name} fluid />

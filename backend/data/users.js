@@ -3,20 +3,26 @@ import bcrypt from "bcryptjs";
 const users = [
   {
     name: "Admin",
-    email: "admin@proshop.com",
-    password: bcrypt.hashSync("proshoppassword", 12),
+    email: "admin@coolmart.com",
+    password: bcrypt.hashSync("adminpassword", 12),
     isAdmin: true,
   },
   {
     name: "Eliot anderson",
-    email: "eliot@proshop.com",
-    password: bcrypt.hashSync("proshoppassword", 12),
+    email: "eliot@coolmart.com",
+    password: bcrypt.hashSync("coolmartpassword", 12),
     isAdmin: false,
   },
   {
     name: "Jane Romero",
-    email: "jane155@proshop.com",
-    password: bcrypt.hashSync("proshoppassword", 12),
+    email: "jane155@coolmart.com",
+    password: bcrypt.hashSync("coolmartpassword", 12),
+    isAdmin: false,
+  },
+  {
+    name: "Random User",
+    email: "user@coolmart.com",
+    password: bcrypt.hashSync("coolmartpassword", 12),
     isAdmin: false,
   },
 ];

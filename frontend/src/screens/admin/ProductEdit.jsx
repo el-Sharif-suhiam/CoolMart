@@ -1,9 +1,9 @@
 import React from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Form, Button } from "react-bootstrap";
-import Message from "../../components/Message";
-import Loader from "../../components/Loader";
-import FormContainer from "../../components/FormContainer";
+import Message from "../../components/utils/Message";
+import Loader from "../../components/utils/Loader";
+import FormContainer from "../../components/utils/FormContainer";
 import { toast } from "react-toastify";
 import {
   useUpdateProductMutation,
@@ -30,11 +30,10 @@ function ProductEdit() {
     error,
   } = useGetProductDetailsQuery(productId);
 
-  const [updateProduct, { isLoading: updateLoading, error: updateError }] =
+  const [updateProduct, { isLoading: updateLoading }] =
     useUpdateProductMutation();
 
-  const [uploadImage, { isLoading: uploadLoading, error: uploadError }] =
-    useUploadImageMutation();
+  const [uploadImage] = useUploadImageMutation();
 
   const navigate = useNavigate();
 
@@ -55,7 +54,7 @@ function ProductEdit() {
   async function submitHandler(e) {
     e.preventDefault();
     try {
-      const res = await updateProduct({
+      await updateProduct({
         _id: productId,
         ...productData,
       }).unwrap();

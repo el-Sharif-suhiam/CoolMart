@@ -1,5 +1,53 @@
 const products = [
   {
+    name: "Xbox Series S 512GB",
+    image: "/images/XBSS.jpg",
+    description:
+      "The Xbox Series S is your gateway to the next generation of gaming at an incredible value. Sleek, powerful, and designed for all-digital gaming, this compact console offers an immersive experience without compromise. Perfect for gamers who value performance and convenience, the Series S is ready to deliver stunning visuals and fast load times.",
+    brand: "Sony",
+    category: "Electronics",
+    price: 399.99,
+    countInStock: 12,
+    rating: 4.4,
+    numReviews: 8,
+  },
+  {
+    name: "Sony PS5 Playstation 5 Disk Edition",
+    image: "/images/PlayStation-5.jpg",
+    description:
+      "Step into the next generation of gaming with the PlayStation 5 Disk Edition, a revolutionary console designed to deliver breathtaking graphics, lightning-fast performance, and immersive gameplay. With support for physical game disks and backward compatibility, the PS5 Disk Edition is perfect for gamers who love collecting physical copies of their favorite titles.",
+    brand: "Sony",
+    category: "Electronics",
+    price: 499.99,
+    countInStock: 6,
+    rating: 4.6,
+    numReviews: 20,
+  },
+  {
+    name: "ASUS ROG Ally RC71L-ALLY.Z1X_512 White",
+    image: "/images/rog-ally.jpg",
+    description:
+      "Take your gaming on the go with the ASUS ROG Ally, a cutting-edge handheld gaming console that combines sleek design with high-performance hardware. Built for gamers who demand power and portability, the ROG Ally delivers an unmatched gaming experience, whether you're at home or on the move.",
+    brand: "ASUS",
+    category: "Electronics",
+    price: 629.99,
+    countInStock: 5,
+    rating: 4.2,
+    numReviews: 8,
+  },
+  {
+    name: "ASUS ROG Strix G16 (2024) Gaming Laptop, 16” 16:10 FHD 165Hz Display, NVIDIA® GeForce RTX™ 4060, Intel Core i7-13650HX, 16GB DDR5, 1TB PCIe Gen4 SSD",
+    image: "/images/Rog_laptop.jpg",
+    description:
+      "Raise your game and carry your squad with the new ROG Strix G16, a powerful gaming laptop that features Windows 11, a 13th Gen Intel Core processor, and an NVIDIA® GeForce RTX™ 40 Series Laptop GPU. With DDR5-4800MHz memory and PCIe Gen4 SSD, this laptop is designed to provide lightning-fast performance and minimize loading times. The ROG Intelligent Cooling system with upgraded liquid metal on the CPU and Tri-Fan Technology, ensures that the laptop can handle the power it can deliver.",
+    brand: "ASUS",
+    category: "Electronics",
+    price: 1322.91,
+    countInStock: 7,
+    rating: 4.5,
+    numReviews: 16,
+  },
+  {
     name: "Airpods Wireless Bluetooth Headphones",
     image: "/images/airpods.jpg",
     description:

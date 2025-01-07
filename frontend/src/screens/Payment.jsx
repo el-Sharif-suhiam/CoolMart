@@ -1,58 +1,64 @@
 import React from "react";
-import { Form, Button, Col } from "react-bootstrap";
-import { useDispatch, useSelector } from "react-redux";
-import { savePaymentMethod } from "../slices/cartSlice";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import FormContainer from "../components/FormContainer";
-import CheckoutSteps from "../components/CheckoutSteps";
+import FormContainer from "../components/utils/FormContainer";
+import CheckoutSteps from "../components/UI/CheckoutSteps";
+import Loader from "../components/utils/Loader";
+import Message from "../components/utils/Message";
+import { useGetStripeClientIdMutation } from "../slices/orderApiSlice";
+import { loadStripe } from "@stripe/stripe-js";
+import {
+  EmbeddedCheckoutProvider,
+  EmbeddedCheckout,
+} from "@stripe/react-stripe-js";
+
+// eslint-disable-next-line no-undef
+const stripePromise = loadStripe(process.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
 function Payment() {
-  const [paymentMethod, setPaymentMethod] = React.useState("PayPal");
-  const dispatch = useDispatch();
+  const [clientSecret, setClientSecret] = React.useState("");
   const navigate = useNavigate();
 
+  //get stripe client secret
+  const [getStripeClientId, { isLoading, error }] =
+    useGetStripeClientIdMutation();
+  //////////////////////////////////////////////////////////////////////////
   const cart = useSelector((state) => state.cart);
   const { shippingAddress } = cart;
-
+  const { cartItems } = cart;
   React.useEffect(() => {
     if (!shippingAddress.address) {
       navigate("/shipping");
     }
   }, [navigate, shippingAddress]);
 
-  async function submitHandler(e) {
-    e.preventDefault();
-    dispatch(savePaymentMethod(paymentMethod));
-    navigate("/placeorder");
-  }
+  React.useEffect(() => {
+    const getClientId = async () => {
+      const res = await getStripeClientId({ cartItems });
+      const client = await res.data.clientSecret;
+      setClientSecret(client);
+    };
+    getClientId();
+  }, []);
+
+  const options = { clientSecret };
   return (
     <FormContainer>
       <CheckoutSteps step1 step2 step3 />
       <h1>Payment Method</h1>
-      <Form>
-        <Form.Group>
-          <Form.Label as="legend">Select Method</Form.Label>
-          <Col>
-            <Form.Check
-              type="radio"
-              label="PayPal or Credit Card"
-              id="PayPal"
-              name="paymentMethod"
-              value="PayPal"
-              checked
-              onChange={(e) => setPaymentMethod(e.target.value)}
-            ></Form.Check>
-          </Col>
-        </Form.Group>
-        <Button
-          type="submit"
-          variant="primary"
-          className="mt-3"
-          onClick={submitHandler}
-        >
-          Continue
-        </Button>
-      </Form>
+      {isLoading ? (
+        <Loader />
+      ) : error ? (
+        <Message variant="danger">
+          {error.data?.message || error.error || error.message}
+        </Message>
+      ) : (
+        <div id="checkout">
+          <EmbeddedCheckoutProvider stripe={stripePromise} options={options}>
+            <EmbeddedCheckout />
+          </EmbeddedCheckoutProvider>
+        </div>
+      )}
     </FormContainer>
   );
 }

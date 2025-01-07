@@ -72,8 +72,6 @@ router.post(
       shippingAddress,
       paymentMethod,
       itemsPrice,
-      taxPrice,
-      shippingPrice,
       totalPrice,
     } = req.body;
 
@@ -91,12 +89,30 @@ router.post(
         shippingAddress,
         paymentMethod,
         itemsPrice,
-        taxPrice,
-        shippingPrice,
         totalPrice,
       });
       const createOrder = await order.save();
       res.status(201).json(createOrder);
+    }
+  })
+);
+
+// @desc update order
+// @route PUT /api/orders/:id
+// @access Private
+router.put(
+  "/api/orders/:id",
+  userAuth,
+  asyncHandler(async (req, res) => {
+    const order = await Order.findById(req.params.id);
+    if (order) {
+      order.isPaid = true;
+      order.paidAt = Date.now();
+      const updatedOrder = await order.save();
+      res.json(updatedOrder);
+    } else {
+      res.status(404);
+      throw new Error("Order not found");
     }
   })
 );

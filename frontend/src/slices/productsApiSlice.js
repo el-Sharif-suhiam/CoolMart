@@ -3,8 +3,8 @@ import { apiSlice } from "./apiSlice";
 export const productApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getProducts: builder.query({
-      query: ({ page, limit }) => ({
-        url: `/api/products?page=${page}&limit=${limit}`,
+      query: ({ page, limit, search }) => ({
+        url: `/api/products?page=${page}&limit=${limit}&search=${search}`,
       }),
       keepUnusedDataFor: 5,
       providesTags: ["Product"],
@@ -15,6 +15,15 @@ export const productApiSlice = apiSlice.injectEndpoints({
       }),
       providesTags: ["Product"],
       keepUnusedDataFor: 5,
+    }),
+    getProductsListByIds: builder.query({
+      query: ({ ids }) => ({
+        url: `/api/products`,
+        method: "POST",
+        body: ids,
+      }),
+      providesTags: ["Product"],
+      keepUnusedDataFor: 10,
     }),
     createProduct: builder.mutation({
       query: () => ({
@@ -53,6 +62,12 @@ export const productApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Product"],
     }),
+    getTopProducts: builder.query({
+      query: () => ({
+        url: "/api/products/top",
+      }),
+      keepUnusedDataFor: 5,
+    }),
   }),
 });
 
@@ -64,4 +79,6 @@ export const {
   useUploadImageMutation,
   useDeleteProductMutation,
   useAddReviewMutation,
+  useGetTopProductsQuery,
+  useGetProductsListByIdsQuery,
 } = productApiSlice;

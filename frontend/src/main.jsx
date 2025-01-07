@@ -1,20 +1,20 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./styles/index.css";
-//import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/css/bootstrap.min.css";
 import {
   createBrowserRouter,
   RouterProvider,
   createRoutesFromElements,
   Route,
 } from "react-router-dom";
-import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 import { Provider } from "react-redux";
 import store from "./store.js";
-import "./styles/bootstrap.custom.css";
+//import "./styles/bootstrap.custom.css";
 import App from "./App.jsx";
-import UserOnlyRoute from "./components/UserOnlyRoute.jsx";
-import AdminOnlyRoute from "./components/AdminOnlyRoute.jsx";
+import UserOnlyRoute from "./components/utils/UserOnlyRoute.jsx";
+import AdminOnlyRoute from "./components/utils/AdminOnlyRoute.jsx";
+import { HelmetProvider } from "react-helmet-async";
 import {
   Home,
   ProductDetail,
@@ -27,7 +27,6 @@ import {
   Cart,
   Login,
 } from "./screens";
-
 import {
   OrdersList,
   ProductsList,
@@ -63,10 +62,10 @@ const router = createBrowserRouter(
 );
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <Provider store={store}>
-      <PayPalScriptProvider deferLoading={true}>
+    <HelmetProvider>
+      <Provider store={store}>
         <RouterProvider router={router} />
-      </PayPalScriptProvider>
-    </Provider>
+      </Provider>
+    </HelmetProvider>
   </StrictMode>
 );

@@ -1,4 +1,5 @@
 import { FaStar, FaStarHalfAlt, FaRegStar } from "react-icons/fa";
+// eslint-disable-next-line react/prop-types
 function Rating({ value, text }) {
   return (
     <div className="rating">

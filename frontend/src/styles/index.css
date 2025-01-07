@@ -2,6 +2,10 @@ main {
   min-height: 80vh;
 }
 
+.bg-custom {
+  background-color: rgb(77 160 169) !important;
+}
+
 .rating span {
   margin: 0.1rem;
 }
@@ -55,4 +59,23 @@ table th {
 .form-control {
   color: #444 !important;
   font-weight: 500 !important;
+}
+
+.text-gradient {
+  background: linear-gradient(to right, #10b981, #3b82f6, #8b5cf6);
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.table-responsive {
+  margin-top: 10px;
+}
+.table-responsive thead th {
+  background-color: #ddd;
+}
+.table-responsive thead th:first-child {
+  border-top-left-radius: 10px;
+}
+.table-responsive thead th:last-child {
+  border-top-right-radius: 10px;
 }

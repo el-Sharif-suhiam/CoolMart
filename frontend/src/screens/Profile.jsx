@@ -1,8 +1,8 @@
 import React from "react";
 import { Table, Form, Button, Row, Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import Message from "../components/Message";
-import Loader from "../components/Loader";
+import Message from "../components/utils/Message";
+import Loader from "../components/utils/Loader";
 import { toast } from "react-toastify";
 import { useProfileMutation } from "../slices/usersApiSlice";
 import { setCredentials } from "../slices/authSlice";
@@ -16,10 +16,9 @@ function Profile() {
   const [confirmPassword, setConfirmPassword] = React.useState("");
 
   const dispatch = useDispatch();
-  //const navigate = useNavigate();
 
   const { userInfo } = useSelector((state) => state.auth);
-  const [profile, { isLoading, error }] = useProfileMutation();
+  const [profile, { isLoading }] = useProfileMutation();
   const {
     data: orders,
     isLoading: loadingOrders,
@@ -126,7 +125,7 @@ function Profile() {
                   <td>${order.totalPrice}</td>
                   <td>
                     {order.isPaid ? (
-                      order.PaidAt.substring(0, 10)
+                      order.paidAt.substring(0, 10)
                     ) : (
                       <FaTimes style={{ color: "red" }} />
                     )}
