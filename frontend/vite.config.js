@@ -15,6 +15,7 @@ dotenv.config({ path: resolve(__dirname, "../.env") });
 
 export default defineConfig({
   plugins: [react()],
+  base: "/",
   server: {
     proxy: {
       "/uploads": {
@@ -41,10 +42,7 @@ export default defineConfig({
       },
     },
   },
-  build: {
-    outDir: "dist",
-    sourcemap: false,
-  },
+
   define: {
     "process.env": process.env,
   },
