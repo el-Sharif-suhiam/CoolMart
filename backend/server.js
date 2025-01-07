@@ -75,5 +75,5 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(port, () => {
-  console.log(`The server are running in post : ${port}`);
+  console.log(`The server are running in port : ${port}`);
 });

@@ -47,6 +47,6 @@ export default defineConfig({
     sourcemap: false,
   },
   define: {
-    "process.env": JSON.stringify(process.env),
+    "process.env": process.env,
   },
 });
