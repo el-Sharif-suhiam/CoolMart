@@ -13,7 +13,7 @@ import {
 } from "@stripe/react-stripe-js";
 
 // eslint-disable-next-line no-undef
-const stripePromise = loadStripe(process.env.VITE_STRIPE_PUBLISHABLE_KEY);
+const stripePromise = loadStripe(process.env.STRIPE_PUBLISHABLE_KEY);
 
 function Payment() {
   const [clientSecret, setClientSecret] = React.useState("");
