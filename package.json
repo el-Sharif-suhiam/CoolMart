@@ -11,7 +11,7 @@
     "dev": "concurrently \"npm run server\" \"npm run client \"",
     "data:import": "node backend/dataSeeder.js",
     "data:destroy": "node backend/dataSeeder.js --delete",
-    "build": "npm install && npm install --prefix frontend && npm run build --prefix frontend"
+    "build": "npm install && npm install --prefix frontend && npm install vite frontend && npm run build --prefix frontend"
   },
   "keywords": [
     "MERN",
